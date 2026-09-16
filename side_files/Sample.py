@@ -1,4 +1,4 @@
-from . import height, width, screen, medium_font
+from packages import height, width, screen, medium_font
 
 class Sample:
     samples = []
@@ -36,3 +36,23 @@ class Sample:
         if self.draw:
             sample_display = medium_font.render(self.name, False, "black")
             screen.blit(sample_display, (width*0.526, self.y))
+
+
+
+def find_samples(x,y, type):
+    import pygame
+    from .attach_key import attach_key
+    
+    text_height = 40
+
+    if width*0.525 <= x <= width*0.95:
+        for sample in Sample.samples:
+            if sample.y <= y <= sample.y+text_height and sample.draw:
+                if type != "hover":
+                    attach_key(sample)
+                    break
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                    break
+
+

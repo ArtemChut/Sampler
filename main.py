@@ -2,13 +2,13 @@ import pygame
 from pygame.locals import *
 import sys
 
-from packages.get_files import get_files
-from packages.display import display_all_samples
+from side_files.get_files import get_files
+from side_files.display import display_all_samples
 from packages.__init__ import width, height, screen
-from packages.scroll import scroll_through_catalogue
-from packages.find_samples import find_samples
-from packages.ready import ready
-import variables
+from side_files.scroll import scroll_through_catalogue
+from side_files.Sample import find_samples
+from side_files.ready import ready
+import packages.variables as variables
 
 
 pygame.init()

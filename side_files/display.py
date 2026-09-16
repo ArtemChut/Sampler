@@ -1,5 +1,5 @@
-from . import pygame, screen, width, height, big_font, medium_font, small_font
-import variables
+from packages import pygame, screen, width, height, big_font, medium_font, small_font
+import packages.variables as variables
 from .Sample import Sample
 
 def display_all_samples():

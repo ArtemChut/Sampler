@@ -1,5 +1,5 @@
 from .Sample import Sample
-from . import height
+from packages import height
 
 def scroll_through_catalogue(direction):
     global height

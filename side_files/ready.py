@@ -2,8 +2,8 @@ import pygame
 from pygame.locals import * 
 import sys
 from .Sample import Sample
-from . import screen, big_font, width, height
-import variables
+from packages import screen, big_font, width, height
+import packages.variables as variables
 
 pygame.init()
 pygame.mixer.init()

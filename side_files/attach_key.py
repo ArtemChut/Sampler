@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
-from . import width, height, screen, medium_font
-import variables
+from packages import width, height, screen, medium_font
+import packages.variables as variables
 from .Sample import Sample
 
 pygame.mixer.init()

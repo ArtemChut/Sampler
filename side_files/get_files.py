@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-import variables
+import packages.variables as variables
 from .Sample import Sample
 
 
