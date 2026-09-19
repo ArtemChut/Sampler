@@ -18,6 +18,4 @@ class BackgroundSample:
 
 background_sample = BackgroundSample()
 
-background_colour = "darkRed"
-
 current_sound = None

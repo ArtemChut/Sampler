@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-from packages.variables import BackgroundSample, background_sample
+import packages.variables as variables
 from .sample import Sample
 
 
@@ -9,7 +9,7 @@ def get_files():
     root.withdraw()
 
 
-    if background_sample.path == "":
+    if variables.background_sample.path == "":
         path = filedialog.askopenfilename(
             title = "Choose a background sample",
             filetypes=[("Audio files", "*.wav *.mp3"),
@@ -18,7 +18,7 @@ def get_files():
                         ("All files", "*.*")])
 
         if path:
-            background_sample.path = path
+            variables.background_sample.path = path
 
             background_sample_name = ""
             path = path[::-1]
@@ -31,7 +31,7 @@ def get_files():
             background_sample_name = background_sample_name[::-1][:-4]
             if len(background_sample_name) > 21:
                 background_sample_name = f"{background_sample_name[:21]}.."
-            background_sample.name = background_sample_name
+            variables.background_sample.name = background_sample_name
         
     else:
         paths = filedialog.askopenfilenames(

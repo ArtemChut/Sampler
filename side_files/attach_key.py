@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from packages import width, height, screen, medium_font
 import packages.variables as variables
-from packages.variables import background_colour
+from packages import background_colour
 from .sample import Sample
 from .volume_slider import interact_slider, display_slider
 
@@ -24,17 +24,19 @@ def remove_sample(sample_chosen):
 
     margin = height//20
 
+    if sample_chosen.type == "background":
+        variables.background_sample = variables.BackgroundSample()
+    else:
+        for sample in Sample.samples[:]:
+            if sample == sample_chosen:
+                Sample.samples.remove(sample_chosen)
+                found = True
 
-    for sample in Sample.samples[:]:
-        if sample == sample_chosen:
-            Sample.samples.remove(sample_chosen)
-            found = True
+            if found:
+                sample.index -= move_by
+                sample.y -= margin
 
-        if found:
-            sample.index -= move_by
-            sample.y -= margin
-
-            move_by += 1
+                move_by += 1
 
 
 

@@ -1,18 +1,18 @@
 from packages import pygame, screen, width, height, big_font, medium_font, small_font
-from packages.variables import background_sample, current_sound
+import packages.variables as variables
 from .sample import Sample
 
 def display_all_samples():
         
     # button that allows a user to upload files
     pygame.draw.rect(screen, "purple", (width*0.15,height*0.05, width*0.7,height*0.15))
-    choose_file_text = "Select a background sample" if background_sample.path == "" else "Select samples for the keyboard"
+    choose_file_text = "Select a background sample" if variables.background_sample.path == "" else "Select samples for the keyboard"
     choose_file_display = big_font.render(choose_file_text, False, "black")
     screen.blit(choose_file_display, (width*0.175, height*0.095))
 
     # the name of a background sample added
     pygame.draw.rect(screen, "red", (width*0.05,height*0.25, width*0.425,height*0.3))
-    background_sample_display = medium_font.render(f"Background sample is:\n\n{background_sample.name}", False, "black")
+    background_sample_display = medium_font.render(f"Background sample is:\n\n{variables.background_sample.name}", False, "black")
     screen.blit(background_sample_display, (width*0.06, height*0.26))
 
     # the names of all the side samples added + their keybinds
