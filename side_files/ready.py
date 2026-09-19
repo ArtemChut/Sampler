@@ -1,9 +1,10 @@
 import pygame
 from pygame.locals import * 
 import sys
-from .Sample import Sample
+from .sample import Sample
 from packages import screen, big_font, width, height
-import packages.variables as variables
+from packages.variables import background_sample
+
 
 pygame.init()
 pygame.mixer.init()
@@ -29,12 +30,20 @@ def ready():
                 sys.exit()
 
             elif event.type == KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    background_sound.stop()
+
+                    import main
+                    main.main()
+                    return # exit
+
                 try:
                     if chr(event.key).isalpha():
                         for sample in Sample.samples:
                             if sample.key == chr(event.key):
                                 sound = pygame.mixer.Sound(sample.path)
                                 sound.play()
+                                sound.set_volume(sample.volume)
 
                                 sample_name_text = big_font.render(sample.name, True, "white")
                                 sample_text_rect = sample_name_text.get_rect(center=(width*0.5, height*0.5))
@@ -59,7 +68,8 @@ def ready():
             screen.blit(remaining_text, (width*0.48, height*0.48))
 
         elif not background_started: # only play this once
-            background_sound = pygame.mixer.Sound(variables.background_sample_path)
+            background_sound = pygame.mixer.Sound(background_sample.path)
+            background_sound.set_volume(background_sample.volume)
 
             background_sound.play(-1)  # loop indefinitely
 

@@ -1,4 +1,4 @@
-from .Sample import Sample
+from .sample import Sample
 from packages import height
 
 def scroll_through_catalogue(direction):

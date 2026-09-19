@@ -6,7 +6,7 @@ from side_files.get_files import get_files
 from side_files.display import display_all_samples
 from packages.__init__ import width, height, screen
 from side_files.scroll import scroll_through_catalogue
-from side_files.Sample import find_samples
+from side_files.sample import find_samples
 from side_files.ready import ready
 import packages.variables as variables
 
@@ -61,8 +61,8 @@ def main():
             elif event.type == KEYDOWN:
                 # make the sound stop if a user clicks on a spacebar
                 if event.key == pygame.K_SPACE:
-                    if variables.sound is not None:
-                        variables.sound.stop()
+                    if variables.current_sound is not None:
+                        variables.current_sound.stop()
 
 
         pygame.display.update()
