@@ -52,8 +52,11 @@ def find_samples(x,y, type):
     text_height = 40
 
     if type != "hover" and background_sample.path != "":
-        if width*0.06 <= x <= width*0.45 and height*0.35-4 <= y <= height*0.35+text_height-4: # 4 pixels is a little margin around text
+        if width*0.06 <= x <= width*0.45 and height*0.35-8 <= y <= height*0.35+text_height-8: # 8 pixels is a little margin around text
             attach_key(background_sample)
+    elif type == "hover" and background_sample.path != "":
+        if width*0.06 <= x <= width*0.45 and height*0.35-8 <= y <= height*0.35+text_height-8:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             
 
     if width*0.525 <= x <= width*0.95:

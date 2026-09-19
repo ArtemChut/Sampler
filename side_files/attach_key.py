@@ -73,7 +73,7 @@ def attach_key(sample):
                 elif event.key == pygame.K_RETURN: return
 
 
-                if sample.type == "background":
+                if sample.type != "background":
                     # if attaching a sample to a specific key - check that its a letter, not e.g. Enter key
                     try: 
                         if chr(event.key).isalpha():
