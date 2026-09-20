@@ -22,7 +22,7 @@ def scroll_through_catalogue(direction, type):
     else:
 
         for instruction in Instruction.all_instructions:
-            if instruction.y <= height*0.11+16+margin-32:
+            if (instruction.y <= height*0.11+16+margin-32) or (instruction.y >= height*0.8-16+margin-32): # 32 is a constant
                 instruction.visible = False
             else:
                 instruction.visible = True

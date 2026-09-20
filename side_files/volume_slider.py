@@ -1,16 +1,23 @@
 from packages import pygame, screen, medium_font, width, height
 
-slider_pos = width*0.12+width*0.275//2
+slider_pos = slider_pos = width*0.12+width*0.275//2
 def display_slider(sample, slider_type="volume"):
     global slider_pos
 
     if slider_type == "fade in" or slider_type == "fade out": 
         length_seconds = pygame.mixer.Sound(sample.path).get_length()
 
+        """width*0.15 is where a slider bar starts
+        (width*0.215) is the width of a slider bar
+        20 and 40 are a little constants & margins
+        sample.fade_in*(width*0.215-40)/length_seconds automatically finds by how many pixels a slider has to be moved in order for the slider not to be able to go out of bounds of our slider"""
+
         if slider_type == "fade in":
-            slider_pos = width*0.15+20 + sample.fade_in*(1020*0.215-40)/length_seconds
+            slider_pos = width*0.15+20 + sample.fade_in*(width*0.215-40)/length_seconds
         else:
-            slider_pos = width*0.15+20 + sample.fade_out*(1020*0.215-40)/length_seconds
+            slider_pos = width*0.15+20 + sample.fade_out*(width*0.215-40)/length_seconds
+    else: # if type is volume
+        slider_pos = width*0.12+width*0.275//2*sample.volume # acc can't remember how i did this, my bad. principle is the same as a fade-in/out
 
 
     if slider_type == "volume":
@@ -23,8 +30,9 @@ def display_slider(sample, slider_type="volume"):
         display_type = "Change fade-out len"
         measure = f"{round(sample.fade_out, 1)}s"
 
-    change_voume_text = medium_font.render(display_type, False, "black")
-    screen.blit(change_voume_text, (width*0.15, height*0.575))
+    # displaying what is currently being changed, volume/fade-in/out
+    change_volume_text = medium_font.render(display_type, False, "black")
+    screen.blit(change_volume_text, (width*0.15, height*0.575))
     pygame.draw.rect(screen, "yellow", (width*0.15,height*0.63, width*0.215,height*0.008),0, 8)
 
     pygame.draw.circle(screen, "green", (slider_pos,height*0.63+2), 10)
@@ -40,21 +48,21 @@ def interact_slider(sample, type="volume"):
     x,y = pygame.mouse.get_pos()
 
     if type == "volume":
-        orig_x = width*0.12+width*0.275//2*sample.volume
+        orig_x = width*0.12+width*0.275//2*sample.volume # position where volume currently is on a slider bar
         if 0 <= sample.volume-(orig_x-x)*0.01 <= 2:
-            sample.volume -= (orig_x-x)*0.01
+            sample.volume -= (orig_x-x)*0.01 # change volume by 1%
             
             slider_pos -= (orig_x-x)*0.9
 
     elif type == "fade in" or type == "fade out":
-        orig_x = width*0.15+20
+        orig_x = width*0.15+20 # very start of the slider bar + margin
 
         length_seconds = pygame.mixer.Sound(sample.path).get_length()
 
         if type == "fade in":
-            if 0 <= (x-orig_x)*0.1 <= length_seconds-sample.fade_out:
-                sample.fade_in = (x-orig_x)*0.1
+            if 0 <= (x-orig_x)*0.1 <= length_seconds-sample.fade_out: # make sure fade-in length can't be longer than sample length - fade-out length
+                sample.fade_in = (x-orig_x)*0.1 # change fade-in length by 0.1 seconds
         else:
-            if 0 <= (x-orig_x)*0.1 <= length_seconds-sample.fade_in:
-                sample.fade_out = (x-orig_x)*0.1
+            if 0 <= (x-orig_x)*0.1 <= length_seconds-sample.fade_in: # make sure fade-out length can't be longer than sample length - fade-in length
+                sample.fade_out = (x-orig_x)*0.1 # change fade-out length by 0.1 seconds
 

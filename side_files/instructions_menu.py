@@ -16,6 +16,9 @@ class Instruction:
         text_height = height*0.1+10
         self.y = height*0.11+self.index*text_height+16
 
+        if self.y >= height*0.8: # don't allow to g out of bounds
+            self.visible = False
+
         Instruction.all_instructions.append(self)
 
 
@@ -36,9 +39,14 @@ class Instruction:
         
 
 
-instructions = (("Press escape when in a mixer menu to go \nback to the main menu", "Esc"),
+instructions = (("Press Esc when in an instructions/ready \nmenu to go back to the main menu", "Esc"),
+                ("Scroll through all the instructions by \nusing a mousewheel", " Mouse \n wheel"),
                 ("Press spacebar after clicking on any \nsample name to play it", "Space\nbar"),
-                ("If clicked a spacebar, click it again to \nstop it from playing", "Space\nbar"))
+                ("If clicked a spacebar, click it again to \nstop it from playing", "Space\nbar"),
+                ("Scroll through the side samples list by \nusing a mousewheel", " Mouse \n wheel"),
+                ("Change fade-in length by pressing Ctrl+\nf+i after clicking on any loaded sample", "Ctrl\n f\n i"),
+                ("Change fade-out length by pressing Ctrl+\nf+i after clicking on any loaded sample", "Ctrl\n f\n o"),
+                ("Re-start everything when in a ready menu \nby clicking on a spacebar", "Space \nbar"))
 
 i = 0
 for instr, icon in instructions:
@@ -48,9 +56,7 @@ for instr, icon in instructions:
 def display_instructions():
     global instructions
 
-
     pygame.draw.rect(screen, "maroon", (width*0.1,height*0.1, width*0.8,height*0.8),0, 24)
-
 
     for instruction in Instruction.all_instructions:
         instruction.display_instruction()
