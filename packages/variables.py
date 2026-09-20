@@ -1,8 +1,10 @@
 class BackgroundSample:
-    def __init__(self, path="", volume=1.0, name=""):
+    def __init__(self, path="", volume=1.0, name="", fade_in=0, fade_out=0):
         self.path = path
         self.volume = volume
         self.type = "background"
+        self.fade_in = fade_in
+        self.fade_out = fade_out
 
         name = ""
         path = self.path[::-1]

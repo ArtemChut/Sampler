@@ -56,7 +56,7 @@ def main():
                 find_button()
 
             elif event.type == MOUSEWHEEL:
-                scroll_through_catalogue(event.y)
+                scroll_through_catalogue(event.y, "side samples")
 
             elif event.type == KEYDOWN:
                 # make the sound stop if a user clicks on a spacebar
