@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import * 
 import sys
 from .sample import Sample
-from packages.all_samples import AllSamples
 from packages import screen, big_font, width, height
 
 pygame.init()
@@ -52,8 +51,10 @@ def check_for_fade_out():
 
 
 
-def stop_samples(type):
+def stop_samples(type, background_sound=None):
     def exit():
+        background_sound.stop()
+
         import main
         main.main()
         return # exit
@@ -75,8 +76,10 @@ def stop_samples(type):
 def ready():
     global screen, background_started
     from packages.variables import background_sample
+    from packages.all_samples import AllSamples
 
     Sound.all_sounds.clear() # removing all existent samples that might've been left there after user going back to the main menu
+    AllSamples.all_played_sample.clear()
 
 
     def check_binded_samples():
@@ -104,12 +107,13 @@ def ready():
                         
                         screen.blit(sample_name_text, (sample_text_rect))
 
-                    break
+                        break
         except: pass
 
 
 
     countdown_length = 3  # seconds
+    background_started = False # re-starting the background sample
 
     # saving everything only once for the background
     started_at = pygame.time.get_ticks() + countdown_length*1000 # adding our countdown but in ml-seconds
@@ -132,7 +136,7 @@ def ready():
             if remaining <= 0: # if a timer that's at the very start has run out - allow to play samples
                 if event.type == KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        stop_samples("exit")
+                        stop_samples("exit", background_sound)
 
 
                     keys = pygame.key.get_pressed()
@@ -146,7 +150,7 @@ def ready():
 
                         stop_samples("pause") # pauses (ends tbh) all the samples currently playing
                         export_recording()
-                        stop_samples("exit") # transfers user back to the main menu
+                        stop_samples("exit", background_sound) # transfers user back to the main menu
 
                         
 
