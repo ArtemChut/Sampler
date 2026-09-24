@@ -3,8 +3,6 @@ from pygame.locals import *
 import sys
 from .sample import Sample
 from packages import screen, big_font, width, height
-from packages.variables import background_sample
-
 
 pygame.init()
 pygame.mixer.init()
@@ -22,11 +20,13 @@ class Sound:
         self.length = length
         self.fade_out = fade_out
 
+
         self.type = type
 
         self.fading_out = False
 
         Sound.all_sounds.append(self)
+
 
 
 background_started = False
@@ -51,9 +51,63 @@ def check_for_fade_out():
 
 
 
+def stop_samples(type):
+    def exit():
+        import main
+        main.main()
+        return # exit
+    
+
+    for playing_sample in Sound.all_sounds:
+        if playing_sample.channel is not None:
+            playing_sample.channel.stop()
+
+    if type == "exit":
+        exit()
+
+
+
 
 def ready():
     global screen, background_started
+    from packages.variables import background_sample
+
+
+    def check_binded_samples():
+        try: # if key pressed is binded to a sample - play it
+            if chr(event.key).isalpha():
+                for sample in Sample.samples:
+                    if sample.key == chr(event.key):
+                        started_at = pygame.time.get_ticks()
+
+                        sound = pygame.mixer.Sound(sample.path)
+                        sound.set_volume(sample.volume)
+
+                        channel = sound.play(fade_ms=int(sample.fade_in * 1000))
+
+                        time_passed = pygame.time.get_ticks() - background_sample.started_at
+                        Sound(channel, started_at, length_seconds, sample.fade_out)
+
+
+                        sample.time_passed = time_passed
+                        sample.length_secs = length_seconds
+                        sample.started_at = started_at
+
+
+                        sample_name_text = big_font.render(sample.name, True, "white")
+                        sample_text_rect = sample_name_text.get_rect(center=(width*0.5, height*0.5))
+                        
+                        screen.blit(sample_name_text, (sample_text_rect))
+        except: pass
+
+
+
+
+    # saving everything only once for the background
+    started_at = pygame.time.get_ticks()
+    length_seconds = pygame.mixer.Sound(background_sample.path).get_length()
+    background_sample.length_secs = length_seconds
+    background_sample.started_at = started_at
 
     start_time = pygame.time.get_ticks()
     countdown_length = 3  # seconds
@@ -68,52 +122,50 @@ def ready():
                 pygame.quit()
                 sys.exit()
 
-            elif event.type == KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    # stopping all the sounds currently playing
-                    background_sound.stop()
+            if remaining <= 0: # if a timer that's at the very start has run out - allow to play samples
+                if event.type == KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
 
-                    for playing_sample in Sound.all_sounds:
-                        if playing_sample.channel is not None:
-                            playing_sample.channel.stop()
-
-                    import main
-                    main.main()
-                    return # exit
-
-                try: # if key pressed is binded to a sample - play it
-                    if chr(event.key).isalpha():
-                        for sample in Sample.samples:
-                            if sample.key == chr(event.key):
-                                started_at = pygame.time.get_ticks()
-                                length_seconds = pygame.mixer.Sound(sample.path).get_length()
-
-                                sound = pygame.mixer.Sound(sample.path)
-                                sound.set_volume(sample.volume)
-
-                                channel = sound.play(fade_ms=int(sample.fade_in*1000))
-
-                                Sound(channel, started_at, length_seconds, sample.fade_out)
+                        stop_samples("exit")
 
 
-                                sample_name_text = big_font.render(sample.name, True, "white")
-                                sample_text_rect = sample_name_text.get_rect(center=(width*0.5, height*0.5))
-                                
-                                screen.blit(sample_name_text, (sample_text_rect))
-                except: pass
+                    keys = pygame.key.get_pressed()
+                    ctrl_held = keys[pygame.K_LCTRL]
+
+                    if ctrl_held and keys[pygame.K_SPACE]:
+                        background_sample.time_passed = pygame.time.get_ticks() - background_sample.started_at
+                        from side_files.export import export_recording
+
+                        export_recording()
+
+                        stop_samples("exit")
+                        
 
 
-                if event.key == pygame.K_SPACE:
-                    background_started = False
-                    background_sound.stop()
-                    start_time = pygame.time.get_ticks()
+                    if ctrl_held: # wait for whether user also presses a spacebar
+                        continue
+
+                    
+                    # checks if a user presses any key on their keyboard that is binded to any side samples
+                    check_binded_samples()
+    
+
+
+                    if event.key == pygame.K_SPACE:
+                        background_started = False
+
+                        stop_samples("stop")
+
+                        start_time = pygame.time.get_ticks()
 
 
 
+        # checkign whether the time left of a sample is <= fade out length
         check_for_fade_out()
 
 
 
+        # a timer before a background sample starts playing
         elapsed = (pygame.time.get_ticks() - start_time) / 1000
         remaining = countdown_length - elapsed
 
@@ -123,7 +175,9 @@ def ready():
             remaining_text = big_font.render(str(time), False, "white")
             screen.blit(remaining_text, (width*0.48, height*0.48))
 
-        elif not background_started: # play infinitely after it stops + a timer has run out
+
+        # play infinitely after it stops + a timer has run out
+        elif not background_started: 
             started_at = pygame.time.get_ticks()
             length_seconds = pygame.mixer.Sound(background_sample.path).get_length()
 

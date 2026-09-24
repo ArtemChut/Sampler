@@ -78,6 +78,8 @@ def attach_key(sample):
                     variables.current_sound.set_volume(sample.volume)
                     channel = variables.current_sound.play(fade_ms=int(sample.fade_in*1000))
 
+                    return # exit
+
 
 
                 keys = pygame.key.get_pressed()
