@@ -3,17 +3,13 @@ from packages import height, width, screen, medium_font
 class Sample:
     samples = []
 
-    def __init__(self, path, index, length_secs=None, started_at=None, time_passed=None, key="", volume=1.0, visible=True, fade_in=0, fade_out=0):
+    def __init__(self, path, index, key="", volume=1.0, visible=True, fade_in=0, fade_out=0):
         self.path = path
         self.index = index
         self.type = "side"
         self.fade_in = fade_in
         self.fade_out = fade_out
-
-        # user later when exporting a file
-        self.length_secs = length_secs
-        self.started_at = started_at
-        self.time_passed = time_passed
+        
 
         self.name = ""
         # saving only thr name of the sample, not the whole directory

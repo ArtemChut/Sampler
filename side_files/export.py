@@ -26,7 +26,7 @@ def pick_location():
 
 
 def export_recording():
-    from side_files.sample import Sample
+    from packages.all_samples import AllSamples
     from packages.variables import background_sample
 
     background = AudioSegment.from_file(background_sample.path)
@@ -45,10 +45,7 @@ def export_recording():
     if fade_out_ms > 0:
         final_audio = final_audio.fade_out(fade_out_ms)
 
-    for sample in Sample.samples:
-        if not hasattr(sample, "time_passed"):
-            continue
-
+    for sample in AllSamples.all_played_sample:
         sample_audio = AudioSegment.from_file(sample.path)
         sample_audio += volume_to_db(sample.volume)
 
